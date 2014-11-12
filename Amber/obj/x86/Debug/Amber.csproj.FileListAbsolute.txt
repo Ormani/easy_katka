@@ -1,0 +1,18 @@
+C:\Users\Аня\Desktop\Amber\Amber\bin\Debug\Amber.exe
+C:\Users\Аня\Desktop\Amber\Amber\bin\Debug\Amber.pdb
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.csprojResolveAssemblyReference.cache
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.Accounts.resources
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.Form1.resources
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.Properties.Resources.resources
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.exe
+C:\Users\Аня\Desktop\Amber\Amber\obj\x86\Debug\Amber.pdb
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.exe
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.pdb
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.csprojResolveAssemblyReference.cache
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.Accounts.resources
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.Form1.resources
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.Properties.Resources.resources
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\bin\Debug\Amber.exe
+C:\Users\Анастасия\Desktop\гуй версия 1.1\Amber\Amber\bin\Debug\Amber.pdb
