@@ -7,28 +7,21 @@ using ProtoBuf;
 
 namespace Amber
 {
-    [ProtoContract]
     class Task : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private string _number, _state, _login;
+        private string _number, _state, _login, _time;
         private int _length;
-        private object _sync = new object();
 
-        public Task(string number, int length, string state, string login)
+        public Task(string number, int length, string state, string login, string time)
         {
             _number = number;
             _length = length;
             _state = state;
             _login = login;
+            _time = time;
         }
 
-        public Task()
-        {
-            
-        }
-
-        [ProtoMember(1)]
         public string Number
         {
             get { return _number; }
@@ -39,7 +32,6 @@ namespace Amber
             }
         }
 
-        [ProtoMember(2)]
         public int Length
         {
             get { return _length; }
@@ -50,19 +42,18 @@ namespace Amber
             }
         }
 
-        [ProtoMember(3)]
         public string State
         {
             get
             {
-                lock (_sync)
+                lock (_state)
                 {
                     return _state;
                 }
             }
             set
             {
-                lock (_sync)
+                lock (_state)
                 {
                     _state = value;
                     NotifyPropertyChanged("State");
@@ -70,23 +61,32 @@ namespace Amber
             }
         }
 
-        [ProtoMember(4)]
         public string Login
         {
             get
             {
-                lock (_sync)
+                lock (_login)
                 {
                     return _login;
                 }
             }
             set
             {
-                lock (_sync)
+                lock (_login)
                 {
                     _login = value;
                     NotifyPropertyChanged("Login");
                 }
+            }
+        }
+
+        public string Time
+        {
+            get { return _time; }
+            set
+            {
+                _time = value;
+                NotifyPropertyChanged("Time");
             }
         }
 
