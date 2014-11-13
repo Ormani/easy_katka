@@ -28,3 +28,14 @@ Z:\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.Pr
 Z:\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
 Z:\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.exe
 Z:\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.pdb
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\bin\Debug\Amber.exe.config
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.exe
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.pdb
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\bin\Debug\Amber.exe
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\bin\Debug\Amber.pdb
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\bin\Debug\VoIPSDK.xml
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.csprojResolveAssemblyReference.cache
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.AccountsForm.resources
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.TasksForm.resources
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.Properties.Resources.resources
+C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
