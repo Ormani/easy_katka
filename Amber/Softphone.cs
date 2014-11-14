@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,7 +15,8 @@ namespace Amber
         IPhoneLine _phoneLine;
         SIPAccount _account;
         readonly List<SIPAccount> _registeredSipAccounts = new List<SIPAccount>();
-        readonly List<IPhoneLine> _availablePhoneLines = new List<IPhoneLine>();
+        //readonly List<IPhoneLine> _availablePhoneLines = new List<IPhoneLine>();
+        readonly ConcurrentDictionary<IPhoneLine, bool> _phoneLinesDictionary = new ConcurrentDictionary<IPhoneLine, bool>(); 
         public event EventHandler<RegistrationStateChangedArgs> PhoneLineStateChanged;
 
         public Softphone()
@@ -43,28 +44,23 @@ namespace Amber
             if (e.State == RegState.RegistrationSucceeded)
             {
                 _registeredSipAccounts.Add(_account);
-                _availablePhoneLines.Add(_phoneLine);
+                _phoneLinesDictionary.TryAdd(_phoneLine, true);
+                //_availablePhoneLines.Add(_phoneLine);
             }
+
             var handler = PhoneLineStateChanged;
             if (handler != null)
                 handler(_account, e);
         }
 
-        public int GetAvailablePhoneLineCount()
-        {
-            lock (_availablePhoneLines)
-                return _availablePhoneLines.Count;
-        }
-
         public IPhoneLine GetAvailablePhoneLine()
         {
-            var randomLine = new Random();
-            var number = randomLine.Next(GetAvailablePhoneLineCount());
-            lock (_availablePhoneLines)
-                return _availablePhoneLines[number];
+            return _phoneLinesDictionary.Where(phoneLine => 
+                _phoneLinesDictionary.TryUpdate(phoneLine.Key, false, true)).Select(phoneLine => 
+                    phoneLine.Key).FirstOrDefault();
         }
 
-        public IPhoneLine GetAvailablePhoneLine(string userName, string domainHost)
+        /*public IPhoneLine GetAvailablePhoneLine(string userName, string domainHost)
         {
             lock (_availablePhoneLines)
             {
@@ -77,27 +73,38 @@ namespace Amber
                 Console.WriteLine("No available phone line with those attributes! First available phone line is being selected.");
                 return _availablePhoneLines[0];
             }
+        }*/
+
+        public void UpdatePhoneLine(IPhoneLine phoneLine)
+        {
+            _phoneLinesDictionary.TryUpdate(phoneLine, true, false);
         }
 
-        public void AddAvailablePhoneLine(IPhoneLine phoneLine)
+        public void UnregPhoneLine(string userName)
         {
-            lock (_availablePhoneLines)
-                _availablePhoneLines.Add(phoneLine);
-        }
-
-        public void RemoveAvailablePhoneLine(IPhoneLine phoneLine)
-        {
-            lock (_availablePhoneLines)
-                _availablePhoneLines.Remove(phoneLine);
+            foreach (var phoneLine in _phoneLinesDictionary.Where(phoneLine => phoneLine.Key.SIPAccount.UserName == userName))
+            {
+                bool temp;
+                _account = phoneLine.Key.SIPAccount;
+                _phoneLine = phoneLine.Key;
+                _phoneLinesDictionary.TryRemove(_phoneLine, out temp);
+                _registeredSipAccounts.Remove(_account);
+                _softphone.UnregisterPhoneLine(_phoneLine);
+                return;
+            }
         }
 
         public void UnregAllPhoneLines()
         {
-            lock (_availablePhoneLines)
-                foreach (var availablePhoneLine in _availablePhoneLines)
-                {
-                    _softphone.UnregisterPhoneLine(availablePhoneLine);
-                }
+            foreach (var phoneLine in _phoneLinesDictionary)
+            {
+                _phoneLine = phoneLine.Key;
+                _account = phoneLine.Key.SIPAccount;
+                bool temp;
+                _phoneLinesDictionary.TryRemove(_phoneLine, out temp);
+                _registeredSipAccounts.Remove(_account);
+                _softphone.UnregisterPhoneLine(phoneLine.Key);
+            }
         }
 
         public IPhoneCall CreateCall(IPhoneLine phoneLine, string member)

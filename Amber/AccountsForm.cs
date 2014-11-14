@@ -108,5 +108,15 @@ namespace Amber
             Softphone.Register(true, textBox1.Text, textBox1.Text, textBox1.Text, textBox2.Text, textBox3.Text, 5060);
             textBox1.Clear();
         }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (MouseButtons.Right != e.Button) return;
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                Softphone.UnregPhoneLine(row.Cells[0].Value.ToString());
+                dataGridView1.Rows.Remove(row);
+            }
+        }
     }
 }

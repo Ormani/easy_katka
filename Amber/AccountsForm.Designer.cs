@@ -50,10 +50,12 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(14, 13);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(6);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(796, 640);
             this.dataGridView1.TabIndex = 0;
+            dataGridView1.CellMouseClick += dataGridView1_CellMouseClick;
             // 
             // groupBox1
             // 
@@ -65,9 +67,9 @@
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(822, 13);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox1.Size = new System.Drawing.Size(420, 504);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
@@ -76,7 +78,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(126, 404);
-            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(6);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(154, 52);
             this.button1.TabIndex = 6;
@@ -87,7 +89,7 @@
             // textBox3
             // 
             this.textBox3.Location = new System.Drawing.Point(40, 306);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(6);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(340, 31);
             this.textBox3.TabIndex = 5;
@@ -106,7 +108,7 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(40, 179);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(6);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(342, 31);
             this.textBox2.TabIndex = 3;
@@ -124,7 +126,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(40, 73);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(6);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(344, 31);
             this.textBox1.TabIndex = 1;
@@ -147,7 +149,7 @@
             this.ClientSize = new System.Drawing.Size(1256, 673);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.dataGridView1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "AccountsForm";
             this.Text = "Accounts";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

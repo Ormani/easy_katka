@@ -1,11 +1,9 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Amber
 {
-    public sealed class ThreadSafeList<T>
+    public sealed class ThreadSafeList<T>: IEnumerable
     {
         private readonly List<T> _mList = new List<T>();
         private readonly object _mLock = new object();
@@ -36,6 +34,16 @@ namespace Amber
                 value = default(T);
                 return false;
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return ((IEnumerable<T>) _mList).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using Ozeki.Media.MediaHandlers;
 using Ozeki.Media.MediaHandlers.Speech;
-using ProtoBuf;
 
 namespace Amber
 {
@@ -111,6 +108,20 @@ namespace Amber
             Show();
             notifyIcon1.Visible = false;
             WindowState = FormWindowState.Normal;
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, MouseEventArgs e)
+        {
+            if (MouseButtons.Right != e.Button) return;
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                foreach (var call in CallList.Cast<CallInfo>().Where(call => (string) row.Cells[0].Value == call.PhoneNumber))
+                {
+                    CallList.TryRemove(call);
+                    dataGridView1.Rows.Remove(row);
+                    return;
+                }
+            }
         }
     }
 }
