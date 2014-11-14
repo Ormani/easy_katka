@@ -51,6 +51,7 @@
     <Reference Include="VoIPSDK">
       <HintPath>C:\Program Files\Ozeki\Ozeki SDK\SDK\.NET4\VoIPSDK.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />

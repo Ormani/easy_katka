@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
+using Ozeki.VoIP;
+using ProtoBuf;
 
 namespace Amber
 {
     public partial class AccountsForm : Form
     {
         private static AccountsForm _instance;
+        private static readonly Softphone Softphone = new Softphone();
+        private static readonly BindingList<Account> AccountsBindingList = new BindingList<Account>();
 
         public static AccountsForm Instance
         {
@@ -24,9 +24,55 @@ namespace Amber
 
         }
 
+        private static void LoadTasks()
+        {
+            try
+            {
+                using (var file = File.OpenRead("accounts.bin"))
+                    foreach (var account in Serializer.DeserializeItems<Account>(file, PrefixStyle.Base128, 0))
+                        Softphone.Register(true, account.Login, account.Login, account.Login, account.Password, account.Server, 5060);
+            }
+
+            catch (FileNotFoundException) { }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+        }
+
+        private static void SaveTasks()
+        {
+            using (var file = File.Create("accounts.bin"))
+                 foreach (var accountBindingList in AccountsBindingList)
+                     Serializer.SerializeWithLengthPrefix(file, accountBindingList, PrefixStyle.Base128);
+        }
+
+        public static void Exit()
+        {
+            Softphone.UnregAllPhoneLines();
+            SaveTasks();
+        }
+
         private AccountsForm() 
         {
             InitializeComponent();
+            dataGridView1.DataSource = AccountsBindingList;
+            Softphone.PhoneLineStateChanged += Softphone_PhoneLineStateChanged;
+            LoadTasks();
+        }
+
+        static void Softphone_PhoneLineStateChanged(object sender, RegistrationStateChangedArgs e)
+        {
+            var sipAccount = sender as SIPAccount;
+            if (e.State == RegState.RegistrationSucceeded)
+            {
+                lock (AccountsBindingList)
+                {
+                    if (sipAccount != null)
+                        AccountsBindingList.Add(new Account
+                            (sipAccount.UserName, sipAccount.RegisterPassword, sipAccount.DomainServerHost, e.State.ToString()));
+                }
+            }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -37,18 +83,30 @@ namespace Amber
                 e.Cancel = true;
                 Hide();
             }
-
             base.OnFormClosing(e);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            Register();
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+        void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
+            if (Keys.Enter == e.KeyCode)
+                Register();
+        }
 
+        void textBox3_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keys.Enter == e.KeyCode)
+                Register();
+        }
+
+        private void Register()
+        {
+            Softphone.Register(true, textBox1.Text, textBox1.Text, textBox1.Text, textBox2.Text, textBox3.Text, 5060);
+            textBox1.Clear();
         }
     }
 }

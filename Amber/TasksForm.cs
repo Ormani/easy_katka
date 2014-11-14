@@ -19,7 +19,7 @@ namespace Amber
         private readonly Thread _tasksThread = new Thread(Start);
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
-        private static readonly object _sync = new object();
+        //private static readonly object _sync = new object();
 
         public TasksForm()
         {
@@ -52,7 +52,6 @@ namespace Amber
             
             notifyIcon1.Visible = false;
             Resize += TasksForm_Resize;
-            LoadTasks();
             base.OnLoad(e);
         }
 
@@ -75,59 +74,9 @@ namespace Amber
             }); 
         }
 
-        private static void LoadTasks()
-        {
-            
-            /* try
-            {
-                using (var file = File.OpenRead("tasks.bin"))
-                {
-                    foreach (var task in Serializer.DeserializeItems<Task>(file, PrefixStyle.Base128, 0))
-                    {
-                        TasksBindingList.Add(task);
-                    }
-                }
-
-                using (var file = File.OpenRead("callList.bin"))
-                {
-                    foreach (var callInfo in Serializer.DeserializeItems<CallInfo>(file, PrefixStyle.Base128, 0))
-                    {
-                        _callList.Add(callInfo);
-                    }
-                }
-            }
-
-            catch (FileNotFoundException) { }
-
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-            }*/
-
-        }
-
-        private static void SaveTasks()
-        {
-           /* using (var file = File.Create("tasks.bin"))
-            {
-                foreach (var task in TasksBindingList)
-                {
-                    Serializer.SerializeWithLengthPrefix(file, task, PrefixStyle.Base128);
-                }
-            }
-
-            using (var file = File.Create("callList.bin"))
-            {
-                foreach (var callInfo in _callList)
-                {
-                    Serializer.SerializeWithLengthPrefix(file, callInfo, PrefixStyle.Base128);
-                }
-            }*/
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
-            SaveTasks();
+            AccountsForm.Exit();
             base.OnClosing(e);
         }
 
@@ -151,10 +100,10 @@ namespace Amber
 
             lock (TasksBindingList)
                 TasksBindingList.Add(new Task(textBox1.Text, richTextBox1.TextLength, "Waiting", "NULL", 
-                    string.Join("-", listBox2.Text, listBox1.Text)));
+                    string.Join("-", comboBox2.Text, comboBox3.Text)));
            
-            CallList.Add(new CallInfo(textBox1.Text, richTextBox1.Text, comboBox1.SelectedItem as VoiceInfo, "null", 
-                    Int32.Parse(listBox2.Text), Int32.Parse(listBox1.Text)));
+            CallList.Add(new CallInfo(textBox1.Text, richTextBox1.Text, comboBox1.SelectedItem as VoiceInfo, "null",
+                    Int32.Parse(comboBox2.Text), Int32.Parse(comboBox3.Text)));
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -163,6 +112,5 @@ namespace Amber
             notifyIcon1.Visible = false;
             WindowState = FormWindowState.Normal;
         }
-
     }
 }

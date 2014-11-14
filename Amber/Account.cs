@@ -17,6 +17,11 @@ namespace Amber
             _state = state;
         }
 
+        public Account()
+        {
+            
+        }
+
         [ProtoMember(1)]
         public string Login
         {
