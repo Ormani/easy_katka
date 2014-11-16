@@ -40,16 +40,15 @@ C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Ambe
 C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.Properties.Resources.resources
 C:\Users\Анастасия\Documents\GitHub\easy_katka\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
 Z:\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.csprojResolveAssemblyReference.cache
-Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\Amber.exe.config
-Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.exe
-Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.pdb
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\Amber.exe
-Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\Amber.pdb
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\protobuf-net.dll
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\VoIPSDK.dll
+Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\Amber.exe.config
+Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\Amber.pdb
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Debug\VoIPSDK.xml
-Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.csprojResolveAssemblyReference.cache
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.AccountsForm.resources
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.TasksForm.resources
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.Properties.Resources.resources
 Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.csproj.GenerateResource.Cache
+Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.exe
+Z:\Users\borisillarionov\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Debug\Amber.pdb

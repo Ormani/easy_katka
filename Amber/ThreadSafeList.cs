@@ -36,6 +36,14 @@ namespace Amber
             }
         }
 
+        public int Size()
+        {
+            lock (_mLock)
+            {
+                return _mList.Count;
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return ((IEnumerable<T>) _mList).GetEnumerator();

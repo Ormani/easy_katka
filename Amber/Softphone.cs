@@ -26,17 +26,17 @@ namespace Amber
 
         public void Register(bool registrationRequired, string displayName, string userName, string authenticationId, string registerPassword, string domainHost, int domainPort)
         {
-            try
-            {
+            //try
+            //{
                 _account = new SIPAccount(registrationRequired, displayName, userName, authenticationId, registerPassword, domainHost, domainPort);
                 _phoneLine = _softphone.CreatePhoneLine(_account);
                 _phoneLine.RegistrationStateChanged += _phoneLine_RegistrationStateChanged;
                 _softphone.RegisterPhoneLine(_phoneLine);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error during SIP registration: {0}", ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show("Error during SIP registration: {0}", ex.Message);
+            //}
         }
 
         void _phoneLine_RegistrationStateChanged(object sender, RegistrationStateChangedArgs e)
@@ -46,6 +46,10 @@ namespace Amber
                 _registeredSipAccounts.Add(_account);
                 _phoneLinesDictionary.TryAdd(_phoneLine, true);
                 //_availablePhoneLines.Add(_phoneLine);
+            }
+            if (e.State == RegState.Error)
+            {
+                MessageBox.Show(@"Error during SIP registration", _account.UserName);
             }
 
             var handler = PhoneLineStateChanged;

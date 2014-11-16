@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using FluorineFx.Messaging.Rtmp.Service;
 using Ozeki.Media.MediaHandlers;
 using Ozeki.Media.MediaHandlers.Speech;
 using Ozeki.VoIP;
@@ -14,7 +15,7 @@ namespace Amber
     public partial class TasksForm : Form
     {
         private readonly AccountsForm _accountsForm = AccountsForm.Instance;
-        private readonly Thread _tasksThread = new Thread(Start);
+        private Thread _tasksThread;
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
         private static readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
@@ -37,6 +38,7 @@ namespace Amber
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _tasksThread = new Thread(Start);
             _tasksThread.Start();
         }
 
@@ -80,15 +82,9 @@ namespace Amber
                             callInfo.SetState("Initializing");
                             StartCallHandler(callInfo, phoneLine);
                         }
-                        else
-                        {
-                            AutoResetEvent.WaitOne();
-                            callInfo.SetState("Initializing");
-                            StartCallHandler(callInfo, phoneLine);
-                        }
                     }
                 });
-                Thread.Sleep(100);
+                Thread.Sleep(500);
             }
         }
 
