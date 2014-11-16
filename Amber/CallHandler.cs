@@ -54,7 +54,7 @@ namespace Amber
 
             var handler = CallStateChanged;
             if (handler != null)
-                handler(_callInfo, EventArgs.Empty);
+                handler(_callInfo, e);
         }
     }
 }

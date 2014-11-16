@@ -13,6 +13,11 @@ namespace Amber
         private static readonly Softphone Softphone = new Softphone();
         private static readonly BindingList<Account> AccountsBindingList = new BindingList<Account>();
 
+        public static Softphone softphone
+        {
+            get { return Softphone; }
+        }
+
         public static AccountsForm Instance
         {
             get

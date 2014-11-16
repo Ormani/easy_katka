@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Ozeki.Media.MediaHandlers;
 using Ozeki.Media.MediaHandlers.Speech;
+using Ozeki.VoIP;
 
 namespace Amber
 {
@@ -16,6 +17,7 @@ namespace Amber
         private readonly Thread _tasksThread = new Thread(Start);
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
+        private static readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
         //private static readonly object _sync = new object();
 
         public TasksForm()
@@ -62,13 +64,62 @@ namespace Amber
 
         private static void Start()
         {
-            System.Threading.Tasks.Task.Factory.StartNew(() =>
+            while (true)
             {
-                while (true)
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
                 {
-                    
+                    foreach (var callInfo in CallList)
+                    {
+                        if ((callInfo.State != "null") && (callInfo.State != "Completed"))
+                            continue;
+                        if ((DateTime.Now.Hour < callInfo.StartTime) || (DateTime.Now.Hour >= callInfo.EndTime))
+                            continue;
+                        var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                        if (null != phoneLine)
+                        {
+                            callInfo.SetState("Initializing");
+                            StartCallHandler(callInfo, phoneLine);
+                        }
+                        else
+                        {
+                            AutoResetEvent.WaitOne();
+                            callInfo.SetState("Initializing");
+                            StartCallHandler(callInfo, phoneLine);
+                        }
+                    }
+                });
+                Thread.Sleep(100);
+            }
+        }
+
+        private static void StartCallHandler(CallInfo callInfo, IPhoneLine phoneLine)
+        {
+            var callHandler = new CallHandler(callInfo, AccountsForm.softphone);
+            callHandler.CallStateChanged += callHandler_CallStateChanged;
+            callHandler.Start(phoneLine);
+        }
+
+        static void callHandler_CallStateChanged(object sender, EventArgs e)
+        {
+            var callState = (CallStateChangedArgs) e;
+            var phoneCall = (IPhoneCall) sender;
+
+            lock (TasksBindingList)
+                foreach (var task in TasksBindingList.Where(task => phoneCall.DialInfo.DialedString == task.Number))
+                {
+                    task.State = phoneCall.CallState.ToString();
+                    task.Login = phoneCall.PhoneLine.SIPAccount.UserName;
+                    break;
                 }
-            }); 
+            foreach (var callInfo in CallList.Cast<CallInfo>().Where(call => call.PhoneNumber == phoneCall.DialInfo.DialedString))
+            {
+                callInfo.SetState(phoneCall.CallState.ToString());
+                if (!callState.State.IsCallEnded()) return;
+                callInfo.SetState("Completed");
+                AutoResetEvent.Set();
+                return;
+            }
+            
         }
 
         protected override void OnClosing(CancelEventArgs e)

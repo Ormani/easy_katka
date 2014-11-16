@@ -9,7 +9,7 @@ using Ozeki.VoIP.SDK;
 
 namespace Amber
 {
-    class Softphone
+    public class Softphone
     {
         readonly ISoftPhone _softphone;
         IPhoneLine _phoneLine;

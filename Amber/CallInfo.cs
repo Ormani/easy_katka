@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Ozeki.Media.MediaHandlers.Speech;
+﻿using Ozeki.Media.MediaHandlers.Speech;
 
 namespace Amber
 {
@@ -10,7 +6,7 @@ namespace Amber
     {
         public string PhoneNumber { get; private set; }
         public string Message { get; private set; }
-        public string State { get; set; }
+        public string State { get; private set; }
         public int StartTime { get; private set; }
         public int EndTime { get; private set; }
         public VoiceInfo Voice { get; private set; }
@@ -24,6 +20,11 @@ namespace Amber
             State = state;
             StartTime = startTime;
             EndTime = endTime;
+        }
+
+        public void SetState(string state)
+        {
+            State = state;
         }
     }
 }
