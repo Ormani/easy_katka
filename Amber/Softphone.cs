@@ -64,6 +64,11 @@ namespace Amber
                     phoneLine.Key).FirstOrDefault();
         }
 
+        public int GetAvaliablePhoneLineCount()
+        {
+            return _phoneLinesDictionary.Count(b => b.Value);
+        }
+
         /*public IPhoneLine GetAvailablePhoneLine(string userName, string domainHost)
         {
             lock (_availablePhoneLines)

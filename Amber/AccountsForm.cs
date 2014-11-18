@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using Ozeki.VoIP;
 using ProtoBuf;
@@ -56,6 +57,7 @@ namespace Amber
         {
             Softphone.UnregAllPhoneLines();
             SaveTasks();
+            Thread.Sleep(500);
         }
 
         private AccountsForm() 

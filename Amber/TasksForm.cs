@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
-using FluorineFx.Messaging.Rtmp.Service;
 using Ozeki.Media.MediaHandlers;
 using Ozeki.Media.MediaHandlers.Speech;
 using Ozeki.VoIP;
@@ -16,6 +15,7 @@ namespace Amber
     {
         private readonly AccountsForm _accountsForm = AccountsForm.Instance;
         private Thread _tasksThread;
+        private static bool _isWorking;
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
         private static readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
@@ -28,7 +28,6 @@ namespace Amber
             dataGridView1.DataSource = TasksBindingList;
             comboBox1.DataSource = new TextToSpeech().GetAvailableVoices();
             comboBox1.DisplayMember = "name";
-            
         }
 
         private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -39,18 +38,19 @@ namespace Amber
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _tasksThread = new Thread(Start);
+            _isWorking = true;
             _tasksThread.Start();
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _isWorking = false;
             _tasksThread.Abort();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             notifyIcon1.Icon = SystemIcons.Shield;
-            
             notifyIcon1.Visible = false;
             Resize += TasksForm_Resize;
             base.OnLoad(e);
@@ -66,26 +66,57 @@ namespace Amber
 
         private static void Start()
         {
-            while (true)
+            MessageBox.Show(AccountsForm.softphone.GetAvaliablePhoneLineCount().ToString());
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
-                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                foreach (var callInfo in CallList)
                 {
-                    foreach (var callInfo in CallList)
+                    
+                    if ((callInfo.State != "null") && (callInfo.State != "Completed"))
+                        continue;
+                    if ((DateTime.Now.Hour < callInfo.StartTime) || (DateTime.Now.Hour >= callInfo.EndTime))
+                        continue;
+
+                    var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                    if (null != phoneLine)
                     {
-                        if ((callInfo.State != "null") && (callInfo.State != "Completed"))
-                            continue;
-                        if ((DateTime.Now.Hour < callInfo.StartTime) || (DateTime.Now.Hour >= callInfo.EndTime))
-                            continue;
-                        var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
-                        if (null != phoneLine)
-                        {
-                            callInfo.SetState("Initializing");
-                            StartCallHandler(callInfo, phoneLine);
-                        }
+                        //callInfo.SetState("Initializing");
+                        StartCallHandler(callInfo, phoneLine);
                     }
-                });
-                Thread.Sleep(500);
-            }
+                    else
+                    {
+                        AutoResetEvent.WaitOne();
+                        phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                        //callInfo.SetState("Initializing");
+                        StartCallHandler(callInfo, phoneLine);
+                    }
+                }
+            });
+        }
+
+        private static void Continue()
+        {
+            if (!_isWorking)
+                return;
+
+            new Thread(() =>
+            {
+                foreach (var callInfo in CallList)
+                {
+                    if ((callInfo.State != "null") && (callInfo.State != "Completed") && (callInfo.State != "Cancelled"))
+                        continue;
+                    if ((DateTime.Now.Hour < callInfo.StartTime) || (DateTime.Now.Hour >= callInfo.EndTime))
+                        continue;
+                    var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                    if (null != phoneLine)
+                    {
+                        //callInfo.SetState("Initializing");
+                        StartCallHandler(callInfo, phoneLine);
+                    }
+                }
+            }).Start();
+
+            
         }
 
         private static void StartCallHandler(CallInfo callInfo, IPhoneLine phoneLine)
@@ -113,6 +144,7 @@ namespace Amber
                 if (!callState.State.IsCallEnded()) return;
                 callInfo.SetState("Completed");
                 AutoResetEvent.Set();
+                Continue();
                 return;
             }
             
