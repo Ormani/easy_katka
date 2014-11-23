@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Amber
@@ -34,6 +35,19 @@ namespace Amber
                 value = default(T);
                 return false;
             }
+        }
+
+        public bool TryGetRandom(out T value)
+        {
+            lock (_mLock)
+                if (0 < _mList.Count)
+                {
+                    var randomIndex = new Random();
+                    value = _mList[randomIndex.Next(_mList.Count)];
+                    return true;
+                }
+            value = default(T);
+            return false;
         }
 
         public int Size()

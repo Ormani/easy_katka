@@ -20,10 +20,14 @@ namespace Amber
 
         public void Start(IPhoneLine phoneLine)
         {
-            var call = _softphone.CreateCall(phoneLine, _callInfo.PhoneNumber);
-            call.CallStateChanged += OutgoingCallStateChanged;
-            _mediaSender.AttachToCall(call);
-            call.Start();
+            try
+            {
+                var call = _softphone.CreateCall(phoneLine, _callInfo.PhoneNumber);
+                call.CallStateChanged += OutgoingCallStateChanged;
+                _mediaSender.AttachToCall(call);
+                call.Start();
+            }
+            catch (Exception) {  }
         }
 
         private void TextToSpeech(string text, IBaseCall currenCall)
@@ -49,7 +53,7 @@ namespace Amber
 
             else if (e.State.IsCallEnded())
             {
-                _softphone.UpdatePhoneLine(((IPhoneCall) sender).PhoneLine);
+                _softphone.UpdatePhoneLine(((IPhoneCall)sender).PhoneLine);
                 TasksForm.CallListPublic.Add(_callInfo);
             }
 

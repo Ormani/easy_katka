@@ -15,7 +15,7 @@ namespace Amber
     {
         private readonly AccountsForm _accountsForm = AccountsForm.Instance;
         private Thread _tasksThread;
-        private static bool _isWorking;
+        //private static bool _isWorking;
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
         private static readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
@@ -38,13 +38,13 @@ namespace Amber
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _tasksThread = new Thread(Start);
-            _isWorking = true;
+            //_isWorking = true;
             _tasksThread.Start();
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _isWorking = false;
+            //_isWorking = false;
             _tasksThread.Abort();
         }
 
@@ -66,7 +66,35 @@ namespace Amber
 
         private static void Start()
         {
-            MessageBox.Show(AccountsForm.softphone.GetAvaliablePhoneLineCount().ToString());
+            while (true)
+            {
+                //System.Threading.Tasks.Task.Factory.StartNew(() =>
+                //{
+                    CallInfo callInfo;
+                    if (CallList.TryGetRandom(out callInfo))
+                        if ((DateTime.Now.Hour >= callInfo.StartTime) && (DateTime.Now.Hour < callInfo.EndTime))
+                        {
+                            var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                            if (null != phoneLine)
+                            {
+                                CallList.TryRemove(callInfo);
+                                StartCallHandler(callInfo, phoneLine);
+                            }
+                            else
+                            {
+                                AutoResetEvent.WaitOne();
+                                phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
+                                CallList.TryRemove(callInfo);
+                                StartCallHandler(callInfo, phoneLine);
+                                AutoResetEvent.Reset();
+                            }
+                        }
+                        else Thread.Sleep(200);
+                    else Thread.Sleep(200);
+                //Thread.Sleep(200);
+                //});
+            }
+            /*MessageBox.Show(AccountsForm.softphone.GetAvaliablePhoneLineCount().ToString());
             System.Threading.Tasks.Task.Factory.StartNew(() =>
             {
                 foreach (var callInfo in CallList)
@@ -91,10 +119,10 @@ namespace Amber
                         StartCallHandler(callInfo, phoneLine);
                     }
                 }
-            });
+            });*/
         }
 
-        private static void Continue()
+        /*private static void Continue()
         {
             if (!_isWorking)
                 return;
@@ -119,9 +147,7 @@ namespace Amber
                     }
                 }
             }).Start();
-
-            
-        }
+        }*/
 
         private static void StartCallHandler(CallInfo callInfo, IPhoneLine phoneLine)
         {
@@ -139,7 +165,6 @@ namespace Amber
         {
             //var callState = (CallStateChangedArgs) e;
             var phoneCall = (IPhoneCall) sender;
-
             lock (TasksBindingList)
                 foreach (var task in TasksBindingList.Where(task => phoneCall.DialInfo.DialedString == task.Number))
                 {
@@ -147,9 +172,10 @@ namespace Amber
                     task.Login = phoneCall.PhoneLine.SIPAccount.UserName;
                     break;
                 }
-            if (CallList.Cast<CallInfo>().All(call => call.PhoneNumber != phoneCall.DialInfo.DialedString)) return;
-            AutoResetEvent.Set();
-            Continue();
+            if (phoneCall.CallState.IsCallEnded())
+                AutoResetEvent.Set();
+            //if (CallList.Cast<CallInfo>().All(call => call.PhoneNumber != phoneCall.DialInfo.DialedString)) return;
+            //AutoResetEvent.Set();
         }
 
         protected override void OnClosing(CancelEventArgs e)
