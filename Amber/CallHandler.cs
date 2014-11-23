@@ -43,13 +43,14 @@ namespace Amber
         private void OutgoingCallStateChanged(object sender, CallStateChangedArgs e)
         {
             var a = (IPhoneCall) sender;
-
+            
             if (e.State == CallState.Answered)
                 TextToSpeech(_callInfo.Message, a);
 
             else if (e.State.IsCallEnded())
             {
                 _softphone.UpdatePhoneLine(((IPhoneCall) sender).PhoneLine);
+                TasksForm.CallListPublic.Add(_callInfo);
             }
 
             var handler = CallStateChanged;

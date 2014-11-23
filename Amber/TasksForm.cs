@@ -103,15 +103,19 @@ namespace Amber
             {
                 foreach (var callInfo in CallList)
                 {
-                    if ((callInfo.State != "null") && (callInfo.State != "Completed") && (callInfo.State != "Cancelled"))
-                        continue;
+                    
+                    //if ((callInfo.State != "null") && (callInfo.State != "Completed") && (callInfo.State != "Cancelled"))
+                    //    continue;
                     if ((DateTime.Now.Hour < callInfo.StartTime) || (DateTime.Now.Hour >= callInfo.EndTime))
                         continue;
                     var phoneLine = AccountsForm.softphone.GetAvailablePhoneLine();
                     if (null != phoneLine)
                     {
                         //callInfo.SetState("Initializing");
+                        CallList.TryRemove(callInfo);
                         StartCallHandler(callInfo, phoneLine);
+                        Continue();
+                        break;
                     }
                 }
             }).Start();
@@ -126,9 +130,14 @@ namespace Amber
             callHandler.Start(phoneLine);
         }
 
+        public static ThreadSafeList<CallInfo> CallListPublic
+        {
+            get { return CallList; }
+        }
+
         static void callHandler_CallStateChanged(object sender, EventArgs e)
         {
-            var callState = (CallStateChangedArgs) e;
+            //var callState = (CallStateChangedArgs) e;
             var phoneCall = (IPhoneCall) sender;
 
             lock (TasksBindingList)
@@ -138,16 +147,9 @@ namespace Amber
                     task.Login = phoneCall.PhoneLine.SIPAccount.UserName;
                     break;
                 }
-            foreach (var callInfo in CallList.Cast<CallInfo>().Where(call => call.PhoneNumber == phoneCall.DialInfo.DialedString))
-            {
-                callInfo.SetState(phoneCall.CallState.ToString());
-                if (!callState.State.IsCallEnded()) return;
-                callInfo.SetState("Completed");
-                AutoResetEvent.Set();
-                Continue();
-                return;
-            }
-            
+            if (CallList.Cast<CallInfo>().All(call => call.PhoneNumber != phoneCall.DialInfo.DialedString)) return;
+            AutoResetEvent.Set();
+            Continue();
         }
 
         protected override void OnClosing(CancelEventArgs e)
