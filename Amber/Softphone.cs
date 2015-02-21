@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Ozeki.VoIP;
 using Ozeki.VoIP.SDK;
@@ -44,7 +45,11 @@ namespace Amber
             if (e.State == RegState.RegistrationSucceeded)
             {
                 _registeredSipAccounts.Add(_account);
-                _phoneLinesDictionary.TryAdd(_phoneLine, true);
+                while (false == _phoneLinesDictionary.TryAdd(_phoneLine, true))
+                {
+                    Thread.Sleep(200);
+                }
+                //_phoneLinesDictionary.TryAdd(_phoneLine, true);
                 //_availablePhoneLines.Add(_phoneLine);
             }
             if (e.State == RegState.Error)
@@ -96,7 +101,10 @@ namespace Amber
                 bool temp;
                 _account = phoneLine.Key.SIPAccount;
                 _phoneLine = phoneLine.Key;
-                _phoneLinesDictionary.TryRemove(_phoneLine, out temp);
+                while (false == _phoneLinesDictionary.TryRemove(_phoneLine, out temp))
+                {
+                    Thread.Sleep(200);
+                }
                 _registeredSipAccounts.Remove(_account);
                 _softphone.UnregisterPhoneLine(_phoneLine);
                 return;

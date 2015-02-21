@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Amber
 {
@@ -16,6 +18,7 @@ namespace Amber
                 _mList.Add(value);
             }
         }
+
         public bool TryRemove(T value)
         {
             lock (_mLock)
@@ -23,6 +26,7 @@ namespace Amber
                 return _mList.Remove(value);
             }
         }
+
         public bool TryGet(int index, out T value)
         {
             lock (_mLock)
@@ -34,6 +38,20 @@ namespace Amber
                 }
                 value = default(T);
                 return false;
+            }
+        }
+
+        public bool TryAdd(T value, int millisecondsTimeout)
+        {
+            if (!Monitor.TryEnter(_mLock, millisecondsTimeout)) return false;
+            try
+            {
+                _mList.Add(value);
+                return true;
+            }
+            finally
+            {
+                Monitor.Exit(_mLock);
             }
         }
 
@@ -60,7 +78,11 @@ namespace Amber
 
         public IEnumerator<T> GetEnumerator()
         {
-            return ((IEnumerable<T>) _mList).GetEnumerator();
+            lock (_mLock)
+            {
+                //return ((IEnumerable<T>)_mList).GetEnumerator();
+                return _mList.ToList().GetEnumerator();
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()

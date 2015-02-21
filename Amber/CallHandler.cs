@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Ozeki.Media.MediaHandlers;
 using Ozeki.VoIP;
 
@@ -54,7 +55,8 @@ namespace Amber
             else if (e.State.IsCallEnded())
             {
                 _softphone.UpdatePhoneLine(((IPhoneCall)sender).PhoneLine);
-                TasksForm.CallListPublic.Add(_callInfo);
+                //TasksForm.CallListPublic.Add(_callInfo);
+                TasksForm.CallListPublic.TryAdd(_callInfo, Timeout.Infinite);
             }
 
             var handler = CallStateChanged;

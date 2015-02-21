@@ -15,11 +15,9 @@ namespace Amber
     {
         private readonly AccountsForm _accountsForm = AccountsForm.Instance;
         private Thread _tasksThread;
-        //private static bool _isWorking;
         private static readonly BindingList<Task> TasksBindingList = new BindingList<Task>();
         private static readonly ThreadSafeList<CallInfo> CallList = new ThreadSafeList<CallInfo>();
         private static readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
-        //private static readonly object _sync = new object();
 
         public TasksForm()
         {
@@ -38,13 +36,11 @@ namespace Amber
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _tasksThread = new Thread(Start);
-            //_isWorking = true;
             _tasksThread.Start();
         }
 
         private void stopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //_isWorking = false;
             _tasksThread.Abort();
         }
 
@@ -206,8 +202,8 @@ namespace Amber
                 TasksBindingList.Add(new Task(textBox1.Text, richTextBox1.TextLength, "Waiting", "NULL", 
                     string.Join("-", comboBox2.Text, comboBox3.Text)));
            
-            CallList.Add(new CallInfo(textBox1.Text, richTextBox1.Text, comboBox1.SelectedItem as VoiceInfo, "null",
-                    Int32.Parse(comboBox2.Text), Int32.Parse(comboBox3.Text)));
+            CallList.TryAdd(new CallInfo(textBox1.Text, richTextBox1.Text, comboBox1.SelectedItem as VoiceInfo, "null",
+                    Int32.Parse(comboBox2.Text), Int32.Parse(comboBox3.Text)), Timeout.Infinite);
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)

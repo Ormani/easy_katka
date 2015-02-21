@@ -1,0 +1,13 @@
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\Amber.exe.config
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\Amber.exe
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\Amber.pdb
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\protobuf-net.dll
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\VoIPSDK.dll
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\bin\Release\VoIPSDK.xml
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.csprojResolveAssemblyReference.cache
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.AccountsForm.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.TasksForm.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.Properties.Resources.resources
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.csproj.GenerateResource.Cache
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.exe
+\\psf\Home\Documents\Visual Studio 2013\Projects\easy_katka\Amber\obj\x86\Release\Amber.pdb
